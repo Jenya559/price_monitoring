@@ -1,0 +1,6 @@
+application:
+  swagger:
+    enabled: true
+    title: Price Monitoring
+    description: price monitoring
+    version: 0.1.0
