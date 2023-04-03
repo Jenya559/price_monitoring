@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RequiredArgsConstructor
 @RestController
@@ -49,7 +50,7 @@ public class ProductMonitoringController {
 
     @GetMapping("/monitoring/price_compare/{productName}")
     @ApiOperation(value = "Сравнение цен по позициям в различных магазинах")
-    public List<ProductMonitoringDTO> getCompareBetweenShops(@PathVariable String productName) {
+    public Set<ProductMonitoringDTO> getCompareBetweenShops(@PathVariable String productName) {
         return productMonitoringService.findAllByProductNameOfProduct(productName);
     }
 }

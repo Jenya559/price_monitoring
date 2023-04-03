@@ -19,8 +19,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -97,15 +98,16 @@ public class ProductMonitoringServiceImpl implements ProductMonitoringService {
     }
 
     @Override
-    public List<ProductMonitoringDTO> findAllByProductNameOfProduct(String productName) {
-        List<ProductMonitoring> productMonitoring = productMonitoringRepository.findAllByProductNameOfProduct(productName);
-        List<ProductMonitoringDTO> productMonitoringDTO = productMonitoringMapper.toDTO(productMonitoring);
-        List<ProductMonitoringDTO>dtoList=new ArrayList<>();
+    public Set<ProductMonitoringDTO> findAllByProductNameOfProduct(String productName) {
+        Set<ProductMonitoring> productMonitoring = productMonitoringRepository.findAllByProductNameOfProduct(productName);
+        Set<ProductMonitoringDTO> productMonitoringDTO = productMonitoringMapper.toDTO(productMonitoring);
+        Set<ProductMonitoringDTO>dtoList=new HashSet<>();
         for (ProductMonitoringDTO list : productMonitoringDTO) {
             Shop shop = shopRepository.findByShopName(list.getShop());
             Product product = productRepository.findByNameOfProduct(list.getProduct());
             ProductMonitoring productMonitoring1 = productMonitoringRepository.findTopByProductAndShopOrderByLocalDateTimeDesc(product, shop);
             dtoList.add(productMonitoringMapper.toDTO(productMonitoring1));
+
         }
         return  dtoList;
     }

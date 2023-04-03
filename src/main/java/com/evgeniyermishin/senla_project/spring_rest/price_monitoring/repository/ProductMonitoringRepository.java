@@ -6,6 +6,7 @@ import com.evgeniyermishin.senla_project.spring_rest.price_monitoring.model.Shop
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Set;
 
 public interface ProductMonitoringRepository extends JpaRepository<ProductMonitoring, Long> {
 
@@ -16,5 +17,5 @@ public interface ProductMonitoringRepository extends JpaRepository<ProductMonito
 
     ProductMonitoring findTopByProductAndShopOrderByLocalDateTimeDesc(Product product, Shop shop);
 
-    List<ProductMonitoring> findAllByProductNameOfProduct(String productName);
+    Set<ProductMonitoring> findAllByProductNameOfProduct(String productName);
 }

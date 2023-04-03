@@ -5,6 +5,7 @@ import com.evgeniyermishin.senla_project.spring_rest.price_monitoring.dto.Produc
 import com.evgeniyermishin.senla_project.spring_rest.price_monitoring.model.ProductMonitoring;
 
 import java.util.List;
+import java.util.Set;
 
 public interface ProductMonitoringService {
 
@@ -16,6 +17,6 @@ public interface ProductMonitoringService {
 
     List<ProductMonitoring> getAllByProductAndShop(String productName, String shopName);
 
-   List<ProductMonitoringDTO> findAllByProductNameOfProduct(String productName);
+   Set<ProductMonitoringDTO> findAllByProductNameOfProduct(String productName);
 
 }

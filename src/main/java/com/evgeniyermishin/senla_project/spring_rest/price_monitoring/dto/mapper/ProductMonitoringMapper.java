@@ -6,6 +6,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 import java.util.List;
+import java.util.Set;
 
 @Mapper(componentModel = "spring",uses = {ShopMapper.class, ProductMapper.class})
 public interface ProductMonitoringMapper {
@@ -22,5 +23,7 @@ public interface ProductMonitoringMapper {
     @Mapping(source = "shop.shopName",target="shop")
     List<ProductMonitoringDTO> toDTO(List<ProductMonitoring>productMonitoring);
 
-
+    @Mapping(source = "product.nameOfProduct",target = "product")
+    @Mapping(source = "shop.shopName",target="shop")
+    Set<ProductMonitoringDTO> toDTO(Set<ProductMonitoring>productMonitoring);
 }
