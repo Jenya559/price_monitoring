@@ -12,7 +12,7 @@ import java.util.Set;
 public interface ProductMonitoringRepository extends JpaRepository<ProductMonitoring, Long> {
 
 
-    ProductMonitoring findProductMonitoringByProductAndShop(Product product, Shop shop);
+    ProductMonitoring findTopByProductAndShop(Product product, Shop shop);
 
     List<ProductMonitoring> findAllByProductNameOfProductAndShopShopName(String productName, String shopName);
 

@@ -44,7 +44,7 @@ public class ProductMonitoringController {
     }
 
     @GetMapping("/dynamic/{productName}/{shopName}")
-    @ApiOperation(value = "Динамика изменения цен ")
+    @ApiOperation(value = "Динамика изменения цен")
     public List<ProductMonitoring> getAllByProductAndShop(@PathVariable String productName, @PathVariable String shopName) {
         return productMonitoringService.getAllByProductAndShop(productName, shopName);
     }

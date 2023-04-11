@@ -38,7 +38,7 @@ public class ShopServiceImpl implements ShopService {
     public void deleteById(Long id) {
         Shop shop = shopRepository.findById(id).orElse(null);
         if (shop == null) {
-            log.warn("Магазин с id ({}) не найден в БД");
+            log.warn("Магазин с id ({}) не найден в БД",id);
             throw new ShopNotFoundException("Магазин не найден в БД");
         }
         shopRepository.deleteById(id);
@@ -49,7 +49,7 @@ public class ShopServiceImpl implements ShopService {
     public ShopDTO getById(Long id) {
         Shop shop = shopRepository.findById(id).orElse(null);
         if (shop == null) {
-            log.warn("Магазин с id ({}) не найден в БД");
+            log.warn("Магазин с id ({}) не найден в БД",id);
             throw new ShopNotFoundException("Магазин не найден в БД");
         }
         return shopMapper.toDTO(shop);
@@ -59,7 +59,7 @@ public class ShopServiceImpl implements ShopService {
     public ShopDTO edit(ShopDTO shopDTO) {
         Shop maybeShop = shopRepository.findById(shopDTO.getId()).orElse(null);
         if (maybeShop == null) {
-            log.warn("Магазин с id ({}) не существует", maybeShop.getId());
+            log.warn("Магазин с id ({}) не существует", shopDTO.getId());
             throw new ShopNotFoundException("Магазин не найден в БД");
         }
         Shop shop = shopMapper.toModel(shopDTO);

@@ -48,7 +48,7 @@ public class ProductController {
     }
 
     @GetMapping("/filterByCategory/{category}")
-    @ApiOperation(value = "Получение продукта по категории")
+    @ApiOperation(value = "Получение продуктов по категории")
     public List<ProductDTO> getProductByCategory(@PathVariable String category) {
         return productService.findAllByCategory(category);
     }
