@@ -35,7 +35,7 @@ public class ProductServiceImpl implements ProductService {
     public ProductDTO getProductById(Long id) {
         Product maybeProduct = productRepository.findById(id).orElse(null);
         if (maybeProduct == null) {
-            log.warn("Продукт с id ({}) не найдена в БД", id);
+            log.warn("Продукт с id ({}) не найден в БД", id);
             throw new ProductNotFoundException("Продукт не найдена в БД");
         }
         return productMapper.toDto(maybeProduct);

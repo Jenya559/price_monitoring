@@ -27,4 +27,4 @@ spring:
     format-sql: true
     packages-scan: com/evgeniyermishin/senla_project/spring_rest/price_monitoring/model
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
