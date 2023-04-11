@@ -3,6 +3,7 @@ package com.evgeniyermishin.senla_project.spring_rest.price_monitoring.model;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -32,6 +33,7 @@ public class ProductMonitoring {
 
     @Column(name="make_date")
     @CreationTimestamp
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime localDateTime;
 
 }

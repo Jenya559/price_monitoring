@@ -12,41 +12,40 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @Api(tags = "shop-rest-controller")
-@RequestMapping("/api")
+@RequestMapping("/api/v1/shop")
 public class ShopController {
 
-  final  ShopService shopService;
+ private final  ShopService shopService;
 
-    @PostMapping("/shop")
+    @PostMapping
     @ApiOperation(value = "Добавление магазина")
-    public ShopDTO saveShop(@RequestBody ShopDTO shopDTO) {
+    public ShopDTO addShop(@RequestBody ShopDTO shopDTO) {
         shopService.addShop(shopDTO);
         return shopDTO;
     }
 
-    @GetMapping("/shop")
+    @GetMapping
     @ApiOperation(value = "Получение всех магазинов")
     public List<ShopDTO> getAllShops(){
         List<ShopDTO>shops= shopService.getAllShops();
         return shops;
     }
 
-    @DeleteMapping("/shop/{id}")
+    @DeleteMapping("/{id}")
     @ApiOperation(value = "Удаление магазина по id")
-    public String deleteShop(@PathVariable Long id){
+    public void deleteShop(@PathVariable Long id){
         shopService.deleteById(id);
-        return "Магазин с id="+id+" удален";
     }
 
-    @GetMapping("/shop/{id}")
+    @GetMapping("/{id}")
     @ApiOperation(value = "Получение магазина по id")
     public ShopDTO getById(@PathVariable Long id){
         ShopDTO shopDTO=shopService.getById(id);
         return shopDTO;
     }
 
-    @PutMapping("/shop")
-    @ApiOperation(value = "")
+    @PutMapping
+    @ApiOperation(value = "Изменение наименования магазина")
     public ShopDTO edit(@RequestBody ShopDTO shopDTO){
         shopService.edit(shopDTO);
         return shopDTO;

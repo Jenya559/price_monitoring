@@ -2,6 +2,7 @@ package com.evgeniyermishin.senla_project.spring_rest.price_monitoring.service;
 
 
 import com.evgeniyermishin.senla_project.spring_rest.price_monitoring.dto.ProductMonitoringDTO;
+import com.evgeniyermishin.senla_project.spring_rest.price_monitoring.dto.PeriodDTO;
 import com.evgeniyermishin.senla_project.spring_rest.price_monitoring.model.ProductMonitoring;
 
 import java.util.List;
@@ -19,4 +20,5 @@ public interface ProductMonitoringService {
 
    Set<ProductMonitoringDTO> findAllByProductNameOfProduct(String productName);
 
+    List<ProductMonitoring> getAllByProductAndShopBetweenLocalDate(PeriodDTO periodDTO);
 }

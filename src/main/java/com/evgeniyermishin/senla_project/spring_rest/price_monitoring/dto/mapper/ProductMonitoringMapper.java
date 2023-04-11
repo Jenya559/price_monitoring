@@ -21,9 +21,13 @@ public interface ProductMonitoringMapper {
 
     @Mapping(source = "product.nameOfProduct",target = "product")
     @Mapping(source = "shop.shopName",target="shop")
+    @Mapping(source = "localDateTime",target = "localDateTime",dateFormat = "yyyy-MM-dd HH:mm")
     List<ProductMonitoringDTO> toDTO(List<ProductMonitoring>productMonitoring);
 
     @Mapping(source = "product.nameOfProduct",target = "product")
     @Mapping(source = "shop.shopName",target="shop")
+    @Mapping(source = "localDateTime",target = "localDateTime",dateFormat = "yyyy-MM-dd HH:mm")
     Set<ProductMonitoringDTO> toDTO(Set<ProductMonitoring>productMonitoring);
+
+
 }

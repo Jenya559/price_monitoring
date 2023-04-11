@@ -1,7 +1,6 @@
 package com.evgeniyermishin.senla_project.spring_rest.price_monitoring.service.impl;
 
 import com.evgeniyermishin.senla_project.spring_rest.price_monitoring.dto.ProductDTO;
-import com.evgeniyermishin.senla_project.spring_rest.price_monitoring.dto.mapper.CategoryMapper;
 import com.evgeniyermishin.senla_project.spring_rest.price_monitoring.dto.mapper.ProductMapper;
 import com.evgeniyermishin.senla_project.spring_rest.price_monitoring.exception.ProductNotFoundException;
 import com.evgeniyermishin.senla_project.spring_rest.price_monitoring.model.Category;
@@ -14,17 +13,17 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
 @Slf4j
 @RequiredArgsConstructor
 @Service
 public class ProductServiceImpl implements ProductService {
 
-    final CategoryMapper categoryMapper;
-    final ProductRepository productRepository;
+    private final ProductRepository productRepository;
 
-    final ProductMapper productMapper;
+    private final ProductMapper productMapper;
 
-    final CategoryRepository categoryRepository;
+    private final CategoryRepository categoryRepository;
 
 
     @Override
@@ -36,8 +35,8 @@ public class ProductServiceImpl implements ProductService {
     public ProductDTO getProductById(Long id) {
         Product maybeProduct = productRepository.findById(id).orElse(null);
         if (maybeProduct == null) {
-            log.warn("Продукта с данным id не существует");
-            throw new ProductNotFoundException("Продукта с данным id не существует");
+            log.warn("Продукт с id ({}) не найдена в БД", id);
+            throw new ProductNotFoundException("Продукт не найдена в БД");
         }
         return productMapper.toDto(maybeProduct);
     }
@@ -54,7 +53,7 @@ public class ProductServiceImpl implements ProductService {
         Product product = productMapper.toProduct(productDTO);
         product.setCategory(category);
         productRepository.saveAndFlush(product);
-        log.info("Продукт добавлен");
+        log.info("Продукт ({}) сохранен", product.getNameOfProduct());
         return productMapper.toDto(product);
     }
 
@@ -62,8 +61,8 @@ public class ProductServiceImpl implements ProductService {
     public ProductDTO editProduct(ProductDTO productDTO) {
         Product maybeProduct = productRepository.findById(productDTO.getId()).orElse(null);
         if (maybeProduct == null) {
-            log.warn("Данного продукта не существует");
-            throw new ProductNotFoundException("Данного продукта не существует");
+            log.warn("Категория с id ({}) не найдена в БД", productDTO.getId());
+            throw new ProductNotFoundException("Продукт не найден в БД");
         }
         Product product = productRepository.saveAndFlush(maybeProduct);
         return productMapper.toDto(product);
@@ -71,15 +70,14 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void deleteById(Long id) {
-        Product isProduct = productRepository.findById(id).orElse(null);
-        if (isProduct == null) {
-            log.warn("Продукта с данным id не существует");
-            throw new ProductNotFoundException("Продукта с данным id не существует");
+        Product maybeProduct = productRepository.findById(id).orElse(null);
+        if (maybeProduct == null) {
+            log.warn("Продукт с id ({}) не найден в БД", id);
+            throw new ProductNotFoundException("Продукт не найден в БД");
         }
         productRepository.deleteById(id);
-        log.info("Продукт удалён");
+        log.info("Продукт ({}) удалён", maybeProduct.getNameOfProduct());
     }
-
 
 
 }

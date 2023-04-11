@@ -16,14 +16,14 @@ import java.util.List;
 @RequiredArgsConstructor
 @Service
 public class CategoryServiceImpl implements CategoryService {
-    final CategoryRepository categoryRepository;
+   private final CategoryRepository categoryRepository;
 
-    final CategoryMapper categoryMapper;
+   private final CategoryMapper categoryMapper;
 
     @Override
     public CategoryDTO addCategory(CategoryDTO categoryDTO) {
         Category category = categoryRepository.saveAndFlush(categoryMapper.toModel(categoryDTO));
-        log.info("Категория " + category.getCategoryName() + " сохранена");
+        log.info("Категория ({}) сохранена", category.getCategoryName());
         return categoryMapper.toDto(category);
     }
 
@@ -36,8 +36,8 @@ public class CategoryServiceImpl implements CategoryService {
     public CategoryDTO getById(Long id) {
         Category category = categoryRepository.findById(id).orElse(null);
         if (category == null) {
-            log.warn("Категории с данным id не существует");
-            throw new CategoryNotFoundException("Категории с данным id не существует");
+            log.warn("Категория с id ({}) не найдена в БД", id);
+            throw new CategoryNotFoundException("Категория не найдена в БД");
 
         }
         return categoryMapper.toDto(category);
@@ -47,22 +47,22 @@ public class CategoryServiceImpl implements CategoryService {
     public void deleteById(Long id) {
         Category category = categoryRepository.findById(id).orElse(null);
         if (category == null) {
-            log.warn("Категории с данным id не существует");
-            throw new CategoryNotFoundException("Категории с данным id не существует");
+            log.warn("Категория с id ({}) не найдена в БД", id);
+            throw new CategoryNotFoundException("Категория не найдена в БД");
         }
         categoryRepository.deleteById(id);
-        log.info("Продукт удалён");
+        log.info("Категория удалена");
     }
 
     @Override
     public CategoryDTO edit(CategoryDTO categoryDTO) {
         Category maybeCategory = categoryRepository.findById(categoryDTO.getId()).orElse(null);
         if (maybeCategory == null) {
-            log.warn("Данное категории нет в базе");
-            throw new CategoryNotFoundException("Данное категории нет в базе");
+            log.warn("Категория с id ({}) не найдена в БД", categoryDTO.getId());
+            throw new CategoryNotFoundException("Категория не найдена в БД");
         }
         Category editCategory = categoryRepository.saveAndFlush(categoryMapper.toModel(categoryDTO));
-        log.info("Категория изменена");
+        log.info("Категория ({}) изменена на ({})", maybeCategory.getCategoryName(), categoryDTO.getCategoryName());
         return categoryMapper.toDto(editCategory);
     }
 

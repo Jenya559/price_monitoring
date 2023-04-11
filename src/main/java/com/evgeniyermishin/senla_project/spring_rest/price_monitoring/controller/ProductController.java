@@ -21,27 +21,27 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @Api(tags = "product-rest-controller")
-@RequestMapping("/api")
+@RequestMapping("/api/v1/product")
 public class ProductController {
 
 
-    final ProductMapper productMapper;
+    private final ProductMapper productMapper;
 
-    final ProductRepository productRepository;
+    private final ProductRepository productRepository;
 
-    final  ProductService productService;
+    private final ProductService productService;
 
-    final CategoryService categoryService;
+    private final CategoryService categoryService;
 
 
-    @GetMapping("/products")
+    @GetMapping
     @ApiOperation(value = "Получение всех продуктов")
     public List<ProductDTO> getAllProducts() {
         return productService.findAllProducts();
 
     }
 
-    @GetMapping("/products/{id}")
+    @GetMapping("/{id}")
     @ApiOperation(value = "Получение продукта по id")
     public ProductDTO getProduct(@PathVariable Long id) {
         return productService.getProductById(id);
@@ -53,23 +53,22 @@ public class ProductController {
         return productService.findAllByCategory(category);
     }
 
-    @PostMapping("/products")
+    @PostMapping
     @ApiOperation(value = "Добавление продуктов")
-    public ProductDTO saveProduct(@RequestBody ProductDTO productDTO) {
-     return   productService.addProduct(productDTO);
+    public ProductDTO addProduct(@RequestBody ProductDTO productDTO) {
+        return productService.addProduct(productDTO);
     }
 
-    @PutMapping("/products")
+    @PutMapping
     @ApiOperation(value = "Изменение продукта")
     public ProductDTO editProduct(@RequestBody ProductDTO productDTO) {
-      return  productService.editProduct(productDTO);
+        return productService.editProduct(productDTO);
     }
 
     @DeleteMapping("/products/{id}")
     @ApiOperation(value = "Удаление продукта по id")
-    public String deleteProduct(@PathVariable Long id) {
+    public void deleteProduct(@PathVariable Long id) {
         productService.deleteById(id);
-        return "Продукт с id=" + id + " удалён";
     }
 
     @PostMapping(value = "/upload", produces = MediaType.MULTIPART_FORM_DATA_VALUE)

@@ -12,41 +12,41 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @Api(tags = "category-rest-controller")
-@RequestMapping("/api")
+@RequestMapping("/api/v1/category")
 public class CategoryController {
 
 
-    final CategoryService categoryService;
+    private final CategoryService categoryService;
 
-    @PostMapping("/category")
+    @PostMapping
     @ApiOperation(value = "Добавление категории продуктов")
     public CategoryDTO saveCategory(@RequestBody CategoryDTO categoryDTO) {
         return categoryService.addCategory(categoryDTO);
 
     }
 
-    @GetMapping("/category")
+    @GetMapping
     @ApiOperation(value = "Получение всех категорий продуктов")
     public List<CategoryDTO> getAllCategories() {
         List<CategoryDTO> categories = categoryService.getAllCategories();
         return categories;
     }
 
-    @GetMapping("/category/{id}")
+    @GetMapping("/{id}")
     @ApiOperation(value = "Получение категории по id")
     public CategoryDTO getCategoryById(@PathVariable Long id) {
         return categoryService.getById(id);
     }
 
-    @DeleteMapping("/category/id/{id}")
+    @DeleteMapping("/{id}")
     @ApiOperation(value = "Удаление категории по id")
-    public String deleteCategory(@PathVariable Long id) {
+    public void deleteCategory(@PathVariable Long id) {
         categoryService.deleteById(id);
-        return "Категория с id=" + id + " удалена";
+
 
     }
 
-    @PutMapping("/category")
+    @PutMapping
     @ApiOperation(value = "Изменение категории")
     public CategoryDTO editCategory(@RequestBody CategoryDTO categoryDTO) {
         return categoryService.edit(categoryDTO);

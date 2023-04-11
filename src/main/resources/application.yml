@@ -1,6 +1,30 @@
 application:
   swagger:
     enabled: true
-    title: Price Monitoring
-    description: price monitoring
+    title: price-monitoring
+    description: price-monitoring
     version: 0.1.0
+
+server:
+  port: 8080
+  servlet:
+    context-path: /price-monitoring
+spring:
+  application:
+    name: price-monitoring
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: 626396bb
+    driver-class-name: org.postgresql.Driver
+    dialect: org.hibernate.dialect.PostgreSQL94Dialect
+  jpa:
+    show-sql: true
+    format-sql: true
+    packages-scan: com/evgeniyermishin/senla_project/spring_rest/price_monitoring/model
+    hibernate:
+      ddl-auto: create

@@ -11,19 +11,20 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
 @Slf4j
 @RequiredArgsConstructor
 @Service
 public class ShopServiceImpl implements ShopService {
 
-    final ShopMapper shopMapper;
-    final ShopRepository shopRepository;
+    private final ShopMapper shopMapper;
+    private final ShopRepository shopRepository;
 
     @Override
     public ShopDTO addShop(ShopDTO shopDTO) {
         Shop shop = shopMapper.toModel(shopDTO);
         shopRepository.saveAndFlush(shop);
-        log.info("Магазин " + shop.getShopName() + " сохранен");
+        log.info("Магазин ({}) сохранён", shop.getShopName());
         return shopDTO;
     }
 
@@ -37,8 +38,8 @@ public class ShopServiceImpl implements ShopService {
     public void deleteById(Long id) {
         Shop shop = shopRepository.findById(id).orElse(null);
         if (shop == null) {
-            log.warn("Магазина с данным id не существует");
-            throw new ShopNotFoundException("Магазина с данным id не существует");
+            log.warn("Магазин с id ({}) не найден в БД");
+            throw new ShopNotFoundException("Магазин не найден в БД");
         }
         shopRepository.deleteById(id);
         log.info("Магазин удалён");
@@ -48,8 +49,8 @@ public class ShopServiceImpl implements ShopService {
     public ShopDTO getById(Long id) {
         Shop shop = shopRepository.findById(id).orElse(null);
         if (shop == null) {
-            log.warn("Магазина с данным id не существует");
-            throw new ShopNotFoundException("Магазина с данным id не существует");
+            log.warn("Магазин с id ({}) не найден в БД");
+            throw new ShopNotFoundException("Магазин не найден в БД");
         }
         return shopMapper.toDTO(shop);
     }
@@ -58,12 +59,12 @@ public class ShopServiceImpl implements ShopService {
     public ShopDTO edit(ShopDTO shopDTO) {
         Shop maybeShop = shopRepository.findById(shopDTO.getId()).orElse(null);
         if (maybeShop == null) {
-            log.warn("Данного магазина не существует");
-            throw new ShopNotFoundException("Данного магазина не существует");
+            log.warn("Магазин с id ({}) не существует", maybeShop.getId());
+            throw new ShopNotFoundException("Магазин не найден в БД");
         }
         Shop shop = shopMapper.toModel(shopDTO);
         shopRepository.saveAndFlush(shop);
-        log.info("Магазин " + shop.getShopName() + " изменён");
+        log.info("Магазин ({}) изменён на ({})",maybeShop.getShopName(),shopDTO.getShopName());
         return shopMapper.toDTO(shop);
     }
 

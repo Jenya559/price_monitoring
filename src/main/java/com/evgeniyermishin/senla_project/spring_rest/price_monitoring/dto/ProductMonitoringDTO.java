@@ -2,6 +2,8 @@ package com.evgeniyermishin.senla_project.spring_rest.price_monitoring.dto;
 
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 @Data
 public class ProductMonitoringDTO {
 
@@ -13,5 +15,6 @@ public class ProductMonitoringDTO {
 
     private String shop;
 
+    private LocalDateTime localDateTime;
 
 }
