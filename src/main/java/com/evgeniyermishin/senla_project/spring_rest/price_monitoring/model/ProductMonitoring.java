@@ -31,9 +31,21 @@ public class ProductMonitoring {
     @JoinColumn(name = "shop_id")
     private Shop shop;
 
-    @Column(name="make_date")
+    @Column(name = "make_date")
     @CreationTimestamp
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime localDateTime;
 
+    public ProductMonitoring(Long id, double price, Product product, Shop shop) {
+        this.id = id;
+        this.price = price;
+        this.product = product;
+        this.shop = shop;
+    }
+
+    public ProductMonitoring(Product product, Shop shop, LocalDateTime localDateTime) {
+        this.product = product;
+        this.shop = shop;
+        this.localDateTime = localDateTime;
+    }
 }

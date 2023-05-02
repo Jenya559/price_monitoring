@@ -3,6 +3,7 @@ package com.evgeniyermishin.senla_project.spring_rest.price_monitoring.service.i
 import com.evgeniyermishin.senla_project.spring_rest.price_monitoring.dto.ProductDTO;
 import com.evgeniyermishin.senla_project.spring_rest.price_monitoring.dto.mapper.ProductMapper;
 import com.evgeniyermishin.senla_project.spring_rest.price_monitoring.exception.CategoryNotFoundException;
+import com.evgeniyermishin.senla_project.spring_rest.price_monitoring.exception.ProductDublicateException;
 import com.evgeniyermishin.senla_project.spring_rest.price_monitoring.exception.ProductNotFoundException;
 import com.evgeniyermishin.senla_project.spring_rest.price_monitoring.model.Category;
 import com.evgeniyermishin.senla_project.spring_rest.price_monitoring.model.Product;
@@ -29,7 +30,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductDTO> findAllProducts() {
-        return productMapper.toDto(productRepository.findAll());
+        List<ProductDTO> list = productMapper.toDto(productRepository.findAll());
+        return list;
     }
 
     @Override
@@ -37,7 +39,7 @@ public class ProductServiceImpl implements ProductService {
         Product maybeProduct = productRepository.findById(id).orElse(null);
         if (maybeProduct == null) {
             log.warn("Продукт с id ({}) не найден в БД", id);
-            throw new ProductNotFoundException("Продукт не найден в БД");
+            throw new ProductNotFoundException();
         }
         return productMapper.toDto(maybeProduct);
     }
@@ -45,10 +47,10 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<ProductDTO> findAllByCategory(String category) {
         List<Product> maybeProducts = productRepository.getAllByCategory_CategoryName(category);
-        Category maybeCategory=categoryRepository.findByCategoryName(category);
-        if(maybeCategory==null){
-            log.warn("Данная категория ({}) не найдена в БД",category);
-            throw new CategoryNotFoundException("Категория не найдена в БД");
+        Category maybeCategory = categoryRepository.findByCategoryName(category);
+        if (maybeCategory == null) {
+            log.warn("Данная категория ({}) не найдена в БД", category);
+            throw new CategoryNotFoundException();
         }
         return productMapper.toDto(maybeProducts);
     }
@@ -56,6 +58,10 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductDTO addProduct(ProductDTO productDTO) {
         Category category = categoryRepository.findByCategoryName(productDTO.getCategory());
+        Product maybeProduct = productRepository.findByNameOfProduct(productDTO.getNameOfProduct());
+        if (maybeProduct != null) {
+            throw new ProductDublicateException();
+        }
         Product product = productMapper.toProduct(productDTO);
         product.setCategory(category);
         productRepository.saveAndFlush(product);
@@ -68,14 +74,14 @@ public class ProductServiceImpl implements ProductService {
         Product maybeProduct = productRepository.findById(productDTO.getId()).orElse(null);
         if (maybeProduct == null) {
             log.warn("Продукт с id ({}) не найден в БД", productDTO.getId());
-            throw new ProductNotFoundException("Продукт не найден в БД");
+            throw new ProductNotFoundException();
         }
-        Category maybeCategory=categoryRepository.findByCategoryName(productDTO.getCategory());
-        if(maybeCategory==null){
-            log.warn("Категория с названием ({}) не найдена в БД",productDTO.getCategory());
-            throw  new CategoryNotFoundException("Категория не найдена в БД");
+        Category maybeCategory = categoryRepository.findByCategoryName(productDTO.getCategory());
+        if (maybeCategory == null) {
+            log.warn("Категория с названием ({}) не найдена в БД", productDTO.getCategory());
+            throw new CategoryNotFoundException();
         }
-        Product product =productMapper.toProduct(productDTO);
+        Product product = productMapper.toProduct(productDTO);
         product.setCategory(maybeCategory);
         productRepository.saveAndFlush(product);
         return productMapper.toDto(product);
@@ -83,13 +89,13 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void deleteById(Long id) {
-        Product maybeProduct = productRepository.findById(id).orElse(null);
-        if (maybeProduct == null) {
-            log.warn("Продукт с id ({}) не найден в БД", id);
-            throw new ProductNotFoundException("Продукт не найден в БД");
-        }
         productRepository.deleteById(id);
-        log.info("Продукт ({}) удалён", maybeProduct.getNameOfProduct());
+        log.info("Продукт c id ({}) удалён", id);
+    }
+
+    @Override
+    public void saveAll(List<Product>list) {
+        productRepository.saveAllAndFlush(list);
     }
 
 

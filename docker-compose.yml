@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+  postgres:
+    image: 'postgres:14.5'
+    container_name: 'postgres-database'
+    environment:
+      - 'POSTGRES_USER=postgres'
+      - 'POSTGRES_PASSWORD=626396bb'
+      - 'POSTGRES_DB=postgres'
+  app:
+    build: ./
+    container_name: 'price-monitoring'
+    ports:
+    - 8080:8080

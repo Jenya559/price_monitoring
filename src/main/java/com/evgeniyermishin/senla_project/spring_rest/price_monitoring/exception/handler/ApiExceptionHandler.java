@@ -17,30 +17,48 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(ShopNotFoundException.class)
     protected ResponseEntity<ResponseErrorDTO> handleShopNotFoundException(RuntimeException ex) {
         ResponseErrorDTO response = new ResponseErrorDTO(ex.getMessage());
-        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @ExceptionHandler(CategoryNotFoundException.class)
     protected ResponseEntity<ResponseErrorDTO> handleCategoryNotFoundException(RuntimeException ex) {
         ResponseErrorDTO response = new ResponseErrorDTO(ex.getMessage());
-        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @ExceptionHandler(ProductNotFoundException.class)
     protected ResponseEntity<ResponseErrorDTO> handleProductNotFoundException(RuntimeException ex) {
         ResponseErrorDTO response = new ResponseErrorDTO(ex.getMessage());
-        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @ExceptionHandler(ProductShopDuplicateException.class)
-    protected ResponseEntity<ResponseErrorDTO> handleProductDuplicateException(RuntimeException ex) {
+    protected ResponseEntity<ResponseErrorDTO> handleProductShopDuplicateException(RuntimeException ex) {
         ResponseErrorDTO response = new ResponseErrorDTO(ex.getMessage());
-        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @ExceptionHandler(MonitoringNotFoundException.class)
     protected ResponseEntity<ResponseErrorDTO> handleMonitoringNotFoundException(RuntimeException ex) {
         ResponseErrorDTO response = new ResponseErrorDTO(ex.getMessage());
-        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @ExceptionHandler(ProductDublicateException.class)
+    protected ResponseEntity<ResponseErrorDTO> handleProductDuplicateException(RuntimeException ex) {
+        ResponseErrorDTO response = new ResponseErrorDTO(ex.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @ExceptionHandler(ShopDublicateEcxeption.class)
+    protected ResponseEntity<ResponseErrorDTO> handleShopDublicateEcxeption(RuntimeException ex) {
+        ResponseErrorDTO response = new ResponseErrorDTO(ex.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @ExceptionHandler(CategoryDublicateException.class)
+    protected ResponseEntity<ResponseErrorDTO> handleCategoryDublicateException(RuntimeException ex) {
+        ResponseErrorDTO response = new ResponseErrorDTO(ex.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

@@ -1,10 +1,8 @@
 package com.evgeniyermishin.senla_project.spring_rest.price_monitoring.service.impl;
 
-import com.evgeniyermishin.senla_project.spring_rest.price_monitoring.dto.ProductMonitoringDTO;
 import com.evgeniyermishin.senla_project.spring_rest.price_monitoring.dto.PeriodDTO;
-import com.evgeniyermishin.senla_project.spring_rest.price_monitoring.dto.mapper.ProductMapper;
+import com.evgeniyermishin.senla_project.spring_rest.price_monitoring.dto.ProductMonitoringDTO;
 import com.evgeniyermishin.senla_project.spring_rest.price_monitoring.dto.mapper.ProductMonitoringMapper;
-import com.evgeniyermishin.senla_project.spring_rest.price_monitoring.dto.mapper.ShopMapper;
 import com.evgeniyermishin.senla_project.spring_rest.price_monitoring.exception.MonitoringNotFoundException;
 import com.evgeniyermishin.senla_project.spring_rest.price_monitoring.exception.ProductNotFoundException;
 import com.evgeniyermishin.senla_project.spring_rest.price_monitoring.exception.ProductShopDuplicateException;
@@ -34,10 +32,6 @@ public class ProductMonitoringServiceImpl implements ProductMonitoringService {
     private final ProductMonitoringMapper productMonitoringMapper;
     private final ProductMonitoringRepository productMonitoringRepository;
 
-    private final ProductMapper productMapper;
-
-    private final ShopMapper shopMapper;
-
     private final ShopRepository shopRepository;
 
     private final ProductRepository productRepository;
@@ -49,17 +43,17 @@ public class ProductMonitoringServiceImpl implements ProductMonitoringService {
         Shop shop = shopRepository.findByShopName(productMonitoringDTO.getShop());
         if (shop == null) {
             log.warn("Данный магазин ({}) не найден в БД", productMonitoringDTO.getShop());
-            throw new ShopNotFoundException("Данный магазин не найден в БД");
+            throw new ShopNotFoundException();
         }
         Product product = productRepository.findByNameOfProduct(productMonitoringDTO.getProduct());
         if (product == null) {
             log.warn("Данный продукт ({}) не найден в БД", productMonitoringDTO.getProduct());
-            throw new ProductNotFoundException("Данный продукт не найден в БД");
+            throw new ProductNotFoundException();
         }
         ProductMonitoring maybeProductMonitoring = productMonitoringRepository.findTopByProductAndShopOrderByLocalDateTimeDesc(product, shop);
         if (maybeProductMonitoring == null) {
             log.warn("Позиция с продуктом ({}) и магазином ({}) отсутствует в БД", product.getNameOfProduct(), shop.getShopName());
-            throw new MonitoringNotFoundException("Позиция отсутствует в БД");
+            throw new MonitoringNotFoundException();
         }
         ProductMonitoring productMonitoring = productMonitoringMapper.toModel(productMonitoringDTO);
         productMonitoring.setShop(shop);
@@ -74,17 +68,17 @@ public class ProductMonitoringServiceImpl implements ProductMonitoringService {
         Shop shop = shopRepository.findByShopName(productMonitoringDTO.getShop());
         if (shop == null) {
             log.warn("Данный магазин ({}) не найден в БД", productMonitoringDTO.getShop());
-            throw new ShopNotFoundException("Данный магазин не найден в БД");
+            throw new ShopNotFoundException();
         }
         Product product = productRepository.findByNameOfProduct(productMonitoringDTO.getProduct());
         if (product == null) {
             log.warn("Данный продукт ({}) не найден в БД", productMonitoringDTO.getProduct());
-            throw new ProductNotFoundException("Данный продукт не найден в БД");
+            throw new ProductNotFoundException();
         }
         ProductMonitoring productMonitoring = productMonitoringRepository.findTopByProductAndShop(product, shop);
         if (productMonitoring != null) {
             log.warn("Позиция с продуктом ({}) и магазином ({}) уже есть в БД", product.getNameOfProduct(), shop.getShopName());
-            throw new ProductShopDuplicateException("Данная позиция уже есть");
+            throw new ProductShopDuplicateException();
         }
         productMonitoring = productMonitoringMapper.toModel(productMonitoringDTO);
         productMonitoring.setProduct(product);
@@ -96,7 +90,8 @@ public class ProductMonitoringServiceImpl implements ProductMonitoringService {
 
     @Override
     public List<ProductMonitoring> getAllPositions() {
-        return productMonitoringRepository.findAll();
+        List<ProductMonitoring> productMonitoringList = productMonitoringRepository.findAll();
+        return productMonitoringList;
 
     }
 
@@ -105,24 +100,24 @@ public class ProductMonitoringServiceImpl implements ProductMonitoringService {
         Product product = productRepository.findByNameOfProduct(productName);
         if (product == null) {
             log.warn("Данный продукт ({}) не найден в БД", productName);
-            throw new ProductNotFoundException("Данный продукт не найден в БД");
+            throw new ProductNotFoundException();
         }
-        Shop shop=shopRepository.findByShopName(shopName);
+        Shop shop = shopRepository.findByShopName(shopName);
         if (shop == null) {
             log.warn("Данный магазин ({}) не найден в БД", shopName);
-            throw new ShopNotFoundException("Данный магазин не найден в БД");
+            throw new ShopNotFoundException();
         }
         List<ProductMonitoring> productMonitoringList = productMonitoringRepository.findAllByProductNameOfProductAndShopShopName(productName, shopName);
         if (productMonitoringList.isEmpty()) {
-            log.warn("Позиция с продуктом ({}) и магазином ({}) не найдена в БД", productName, shopName);
-            throw new MonitoringNotFoundException("Данная позиция не найдена в БД");
+            log.warn("Позиций с продуктом ({}) и магазином ({}) не найдено в БД", productName, shopName);
+            throw new MonitoringNotFoundException();
         }
         return productMonitoringList;
     }
 
     @Override
     public Set<ProductMonitoringDTO> findAllByProductNameOfProduct(String productName) {
-        Product maybeProduct=productRepository.findByNameOfProduct(productName);
+        Product maybeProduct = productRepository.findByNameOfProduct(productName);
         if (maybeProduct == null) {
             log.warn("Данный продукт ({}) не найден в БД", productName);
             throw new ProductNotFoundException("Данный продукт не найден в БД");
@@ -150,8 +145,8 @@ public class ProductMonitoringServiceImpl implements ProductMonitoringService {
         LocalDateTime endDate = LocalDateTime.parse(periodDTO.getEndDate(), formatter);
         List<ProductMonitoring> productMonitoringList = productMonitoringRepository.findAllByProductNameOfProductAndShopShopNameAndLocalDateTimeBetween(periodDTO.getNameOfProduct(), periodDTO.getShopName(), startDate, endDate);
         if (productMonitoringList.isEmpty()) {
-            log.warn("Позиция с продуктом ({}) и магазином ({}) с периодами ({}) - ({}) не найдена в БД", periodDTO.getNameOfProduct(), periodDTO.getShopName(), periodDTO.getStartDate(), periodDTO.getEndDate());
-            throw new MonitoringNotFoundException("Данная позиция не найдена в БД");
+            log.warn("Позиции с продуктом ({}) и магазином ({}) с датами добавления ({}) - ({}) не найдены в БД", periodDTO.getNameOfProduct(), periodDTO.getShopName(), periodDTO.getStartDate(), periodDTO.getEndDate());
+            throw new MonitoringNotFoundException();
         }
         return productMonitoringList;
 

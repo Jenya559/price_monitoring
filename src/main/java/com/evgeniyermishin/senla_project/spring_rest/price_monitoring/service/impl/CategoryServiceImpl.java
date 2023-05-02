@@ -2,6 +2,7 @@ package com.evgeniyermishin.senla_project.spring_rest.price_monitoring.service.i
 
 import com.evgeniyermishin.senla_project.spring_rest.price_monitoring.dto.CategoryDTO;
 import com.evgeniyermishin.senla_project.spring_rest.price_monitoring.dto.mapper.CategoryMapper;
+import com.evgeniyermishin.senla_project.spring_rest.price_monitoring.exception.CategoryDublicateException;
 import com.evgeniyermishin.senla_project.spring_rest.price_monitoring.exception.CategoryNotFoundException;
 import com.evgeniyermishin.senla_project.spring_rest.price_monitoring.model.Category;
 import com.evgeniyermishin.senla_project.spring_rest.price_monitoring.repository.CategoryRepository;
@@ -16,20 +17,26 @@ import java.util.List;
 @RequiredArgsConstructor
 @Service
 public class CategoryServiceImpl implements CategoryService {
-   private final CategoryRepository categoryRepository;
+    private final CategoryRepository categoryRepository;
 
-   private final CategoryMapper categoryMapper;
+    private final CategoryMapper categoryMapper;
 
     @Override
     public CategoryDTO addCategory(CategoryDTO categoryDTO) {
-        Category category = categoryRepository.saveAndFlush(categoryMapper.toModel(categoryDTO));
+        Category maybeCategory = categoryRepository.findByCategoryName(categoryDTO.getCategoryName());
+        if (maybeCategory != null) {
+            throw new CategoryDublicateException();
+        }
+        Category category = categoryMapper.toModel(categoryDTO);
+        categoryRepository.saveAndFlush(category);
         log.info("Категория ({}) сохранена", category.getCategoryName());
         return categoryMapper.toDto(category);
     }
 
     @Override
     public List<CategoryDTO> getAllCategories() {
-        return categoryMapper.toDto(categoryRepository.findAll());
+        List<CategoryDTO> list = categoryMapper.toDto(categoryRepository.findAll());
+        return list;
     }
 
     @Override
@@ -37,19 +44,13 @@ public class CategoryServiceImpl implements CategoryService {
         Category category = categoryRepository.findById(id).orElse(null);
         if (category == null) {
             log.warn("Категория с id ({}) не найдена в БД", id);
-            throw new CategoryNotFoundException("Категория не найдена в БД");
-
+            throw new CategoryNotFoundException();
         }
         return categoryMapper.toDto(category);
     }
 
     @Override
     public void deleteById(Long id) {
-        Category category = categoryRepository.findById(id).orElse(null);
-        if (category == null) {
-            log.warn("Категория с id ({}) не найдена в БД", id);
-            throw new CategoryNotFoundException("Категория не найдена в БД");
-        }
         categoryRepository.deleteById(id);
         log.info("Категория удалена");
     }
@@ -59,10 +60,10 @@ public class CategoryServiceImpl implements CategoryService {
         Category maybeCategory = categoryRepository.findById(categoryDTO.getId()).orElse(null);
         if (maybeCategory == null) {
             log.warn("Категория с id ({}) не найдена в БД", categoryDTO.getId());
-            throw new CategoryNotFoundException("Категория не найдена в БД");
+            throw new CategoryNotFoundException();
         }
-        Category editCategory = categoryRepository.saveAndFlush(categoryMapper.toModel(categoryDTO));
         log.info("Категория ({}) изменена на ({})", maybeCategory.getCategoryName(), categoryDTO.getCategoryName());
+        Category editCategory = categoryRepository.saveAndFlush(categoryMapper.toModel(categoryDTO));
         return categoryMapper.toDto(editCategory);
     }
 

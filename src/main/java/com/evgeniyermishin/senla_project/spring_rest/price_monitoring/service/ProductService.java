@@ -1,6 +1,7 @@
 package com.evgeniyermishin.senla_project.spring_rest.price_monitoring.service;
 
 import com.evgeniyermishin.senla_project.spring_rest.price_monitoring.dto.ProductDTO;
+import com.evgeniyermishin.senla_project.spring_rest.price_monitoring.model.Product;
 
 import java.util.List;
 
@@ -18,6 +19,6 @@ public interface ProductService {
 
     void deleteById(Long id);
 
-
+    void saveAll(List<Product>list);
 }
 

@@ -15,9 +15,13 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
-
+    view:
+      prefix: '"templates"'
+      suffix: '".html"'
+  main:
+    allow-circular-references: true
   datasource:
-    url: jdbc:postgresql://localhost:5432/postgres
+    url: jdbc:postgresql://postgres:5432/postgres
     username: postgres
     password: 626396bb
     driver-class-name: org.postgresql.Driver
@@ -27,4 +31,13 @@ spring:
     format-sql: true
     packages-scan: com/evgeniyermishin/senla_project/spring_rest/price_monitoring/model
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
+
+
+
+#security
+#App Properties
+bezkoder:
+  app:
+    jwtSecret: bezKoderSecretKey
+    jwtExpirationMs: '86400000'
